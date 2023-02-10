@@ -13,9 +13,14 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          submodules: recursive
+
+      - name: Checkout submodules
+        run: git submodule update --init --recursive
 
       - name: Configure Git
         run: |
+          ls
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
