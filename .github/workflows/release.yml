@@ -18,7 +18,7 @@ jobs:
       - name: Checkout osh infra
         uses: actions/checkout@master
         with:
-          repository: $GITHUB_REPOSITORY_OWNER/openstack-helm-infra
+          repository: ceesios/openstack-helm-infra
           path: ./openstack-helm-infra
 
       - name: Configure Git
