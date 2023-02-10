@@ -12,11 +12,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0
-
-      - name: Checkout openstack-helm in subdirectory
-        uses: actions/checkout@v2
-        with:
           path: ./openstack-helm
           fetch-depth: 0
 
@@ -33,10 +28,20 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      # Only works if charts are in a subdirectory
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.1.0
-        with:
-          charts_dir: "openstack-helm"
+      - name: Run chart-releaser local
+        run: |
+          cd ./openstack-helm
+          install="$RUNNER_TOOL_CACHE/cr/${{ inputs.version }}/$(uname -m)"
+          echo "$install" >> "$GITHUB_PATH"
+          repo=$(cut -d '/' -f 2 <<< "$GITHUB_REPOSITORY")
+          . ./.github/workflows/cr.sh -o $GITHUB_REPOSITORY_OWNER -d . --repo $repo -n ./ --install-dir "$install"
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      ## Only works if charts are in a subdirectory
+      # - name: Run chart-releaser
+      #   uses: helm/chart-releaser-action@v1.1.0
+      #   with:
+      #     charts_dir: "charts"
+      #   env:
+      #     CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
