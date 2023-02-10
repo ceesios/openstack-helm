@@ -15,12 +15,14 @@ jobs:
           fetch-depth: 0
           submodules: recursive
 
-      - name: Checkout submodules
-        run: git submodule update --init --recursive
+      - name: Checkout osh infra
+        uses: actions/checkout@master
+        with:
+          name: $GITHUB_REPOSITORY_OWNER/openstack-helm-infra
 
       - name: Configure Git
         run: |
-          ls
+          ls ../
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
@@ -28,9 +30,8 @@ jobs:
         run: |
           install="$RUNNER_TOOL_CACHE/cr/${{ inputs.version }}/$(uname -m)"
           echo "$install" >> "$GITHUB_PATH"
-          owner=$(cut -d '/' -f 1 <<< "$GITHUB_REPOSITORY")
           repo=$(cut -d '/' -f 2 <<< "$GITHUB_REPOSITORY")
-          . ./.github/workflows/cr.sh -o $owner -d . --repo $repo -n ./ --install-dir "$install"
+          . ./.github/workflows/cr.sh -o $GITHUB_REPOSITORY_OWNER -d . --repo $repo -n ./ --install-dir "$install"
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
