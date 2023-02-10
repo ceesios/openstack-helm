@@ -34,7 +34,7 @@ jobs:
           install="$RUNNER_TOOL_CACHE/cr/${{ inputs.version }}/$(uname -m)"
           echo "$install" >> "$GITHUB_PATH"
           repo=$(cut -d '/' -f 2 <<< "$GITHUB_REPOSITORY")
-          . ./.github/workflows/cr.sh -o $GITHUB_REPOSITORY_OWNER -d ./openstack-helm --repo $repo -n ./ --install-dir "$install"
+          . ./openstack-helm/.github/workflows/cr.sh -o $GITHUB_REPOSITORY_OWNER -d ./openstack-helm --repo $repo -n ./ --install-dir "$install"
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
